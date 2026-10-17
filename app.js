@@ -1,17 +1,4 @@
-const FALLBACK_REPO = "gorillaou/kortex-client";
-
-function detectRepo() {
-  const host = location.hostname;
-  if (host.endsWith(".github.io")) {
-    const owner = host.split(".")[0];
-    const repo = location.pathname.split("/").filter(Boolean)[0] || `${owner}.github.io`;
-    return `${owner}/${repo}`;
-  }
-  return FALLBACK_REPO;
-}
-
-const REPO = detectRepo();
-const CACHE_KEY = `kortex-releases:${REPO}`;
+const CACHE_KEY = "kortex-releases";
 const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Palettes mirror com.beastmode.client.theme.Themes.
@@ -275,7 +262,7 @@ function requirementChips(release) {
 
 function downloadButton(release, size = "btn-md") {
   const jar = primaryJar(release);
-  if (!jar) return el("a", { class: `btn btn-ghost ${size}`, href: release.html_url, target: "_blank", rel: "noopener", text: "View release" });
+  if (!jar) return el("span", { class: `btn btn-ghost ${size}`, text: "No download" });
   return el("a", { class: `btn btn-primary ${size}`, href: jar.browser_download_url, onclick: () => toast(`Downloading ${jar.name}…`) }, [icon("download"), "Download"]);
 }
 
@@ -377,18 +364,9 @@ function applyReleases(releases) {
 }
 
 async function fetchReleases() {
-  const releases = [];
-  for (let page = 1; ; page++) {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=100&page=${page}`, {
-      headers: { Accept: "application/vnd.github+json" },
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
-    const batch = await res.json();
-    releases.push(...batch.filter((r) => !r.draft));
-    if (batch.length < 100) break;
-  }
-  return releases;
+  const res = await fetch("/api/releases");
+  if (!res.ok) throw new Error(`Releases API returned ${res.status}`);
+  return res.json();
 }
 
 async function loadReleases() {
@@ -406,12 +384,8 @@ async function loadReleases() {
     document.getElementById("latest-release").innerHTML = "";
     const list = document.getElementById("release-list");
     list.innerHTML = "";
-    list.append(el("li", { class: "empty" }, [
-      "Couldn't load versions right now. ",
-      el("a", { href: `https://github.com/${REPO}/releases`, target: "_blank", rel: "noopener", text: "View them on GitHub" }),
-      ".",
-    ]));
-    document.getElementById("hero-pill").textContent = "View releases on GitHub";
+    list.append(el("li", { class: "empty", text: "Couldn't load versions right now. Try again in a minute." }));
+    document.getElementById("hero-pill").textContent = "Downloads are temporarily unavailable";
   }
 }
 
