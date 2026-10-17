@@ -1,4 +1,4 @@
-const { githubFetch } = require("./_github");
+const { githubFetch, hasToken } = require("./_github");
 
 module.exports = async (req, res) => {
   try {
@@ -21,11 +21,13 @@ module.exports = async (req, res) => {
         name: a.name,
         size: a.size,
         download_count: a.download_count,
-        browser_download_url: `/api/download?asset=${a.id}`,
+        browser_download_url: hasToken() ? `/api/download?asset=${a.id}` : a.browser_download_url,
       })),
     }));
 
-    res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+    res.setHeader("Cache-Control", hasToken()
+      ? "public, s-maxage=60, stale-while-revalidate=300"
+      : "public, s-maxage=300, stale-while-revalidate=3600");
     res.status(200).json(body);
   } catch (err) {
     console.error(err);

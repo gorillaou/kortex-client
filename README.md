@@ -4,13 +4,12 @@ Download site for every version of Kortex Client, a Fabric utility client for Mi
 
 Live at **https://kortex-client.vercel.app**
 
-The repo is private, so the site never talks to GitHub from the browser. Two Vercel functions do it server-side:
+The site lists releases through a Vercel function, `api/releases.js`, so every version (old and new) shows up automatically.
 
-- `api/releases.js` lists every release (old and new) for the site.
-- `api/download.js?asset=<id>` redirects to a short-lived download link for a jar.
-
-Both need a `GITHUB_TOKEN` environment variable in Vercel: a fine-grained token with read-only
-**Contents** access to `gorillaou/kortex-client`.
+While the repo is public, no setup is needed: downloads go straight to GitHub.
+If the repo is made private, add a `GITHUB_TOKEN` environment variable in Vercel (a fine-grained token with
+read-only **Contents** access to `gorillaou/kortex-client`). Downloads then go through `api/download.js`,
+which redirects to a short-lived download link.
 
 ## Publishing a new version
 
