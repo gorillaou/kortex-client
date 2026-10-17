@@ -29,6 +29,7 @@ module.exports = async (req, res) => {
     res.status(200).json(body);
   } catch (err) {
     console.error(err);
-    res.status(502).json({ error: "Couldn't load releases" });
+    res.setHeader("Cache-Control", "no-store");
+    res.status(502).json({ error: "Couldn't load releases", reason: err.message });
   }
 };
