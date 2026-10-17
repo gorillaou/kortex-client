@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kortex Client — Downloads</title>
+  <meta name="description" content="Download every version of Kortex Client, a Fabric utility client for Minecraft." />
+  <link rel="icon" href="assets/icon.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="glow"></div>
+
+  <header class="hero">
+    <img class="logo" src="assets/icon.png" alt="Kortex logo" />
+    <h1>Kortex <span>Client</span></h1>
+    <p class="tagline">Aesthetic Fabric utility client with ESP, combat, movement and HUD modules and a themed ClickGUI.</p>
+    <div class="hero-actions">
+      <a id="latest-btn" class="btn primary" href="#versions">Download latest</a>
+      <a class="btn ghost" href="#install">How to install</a>
+    </div>
+    <p id="latest-meta" class="meta"></p>
+  </header>
+
+  <main>
+    <section id="versions">
+      <h2>All versions</h2>
+      <p class="sub">Every release of Kortex Client, newest first.</p>
+      <div id="release-list" class="release-list">
+        <div class="card loading">Loading versions…</div>
+      </div>
+    </section>
+
+    <section id="install">
+      <h2>How to install</h2>
+      <ol class="steps">
+        <li>Install <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric Loader</a> <b>0.19.5+</b> for Minecraft <b>26.3</b>.</li>
+        <li>Download <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Fabric API</a> for 26.3.</li>
+        <li>Put the Kortex <code>.jar</code> and Fabric API into your <code>.minecraft/mods</code> folder.</li>
+        <li>Launch the Fabric profile (Java <b>25+</b> required) and press <kbd>Right Shift</kbd> to open the ClickGUI.</li>
+      </ol>
+    </section>
+
+    <section id="requirements">
+      <h2>Requirements</h2>
+      <div class="req-grid">
+        <div class="req"><span>Minecraft</span><b>26.3</b></div>
+        <div class="req"><span>Fabric Loader</span><b>0.19.5+</b></div>
+        <div class="req"><span>Fabric API</span><b>0.162.0+26.3</b></div>
+        <div class="req"><span>Java</span><b>25+</b></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Kortex Client &middot; MIT License</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
