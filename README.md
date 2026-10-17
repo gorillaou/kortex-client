@@ -2,15 +2,17 @@
 
 Download site for every version of Kortex Client, a Fabric utility client for Minecraft 26.3.
 
-The site lists all releases from this repo's **Releases** tab automatically.
+Live at **https://gorillaou.github.io/kortex-client/**
+
+The site reads this repo's **Releases** at page load, so every published version (old and new) shows up automatically.
 
 ## Publishing a new version
 
-1. Build the client: `./gradlew build` (jar lands in `build/libs/`).
-2. Create a release with the jar attached:
+Releases are published automatically by the client's Gradle build:
 
-```bash
-gh release create v1.1.0 build/libs/kortex-1.1.0.jar --repo gorillaou/kortex-client --title "Kortex 1.1.0" --notes "What's new..."
-```
+1. *(Optional)* Write what changed in `release-notes.txt` in the client project.
+2. Run `./gradlew build`.
 
-The new version appears on the site immediately.
+If the client's source changed since the last release, the build bumps the patch version
+(`1.0.0` → `1.0.1`), builds the jar, and publishes it here as a new release. Older releases are never touched.
+To jump to a bigger version, set `version=` in `gradle.properties` yourself before building.

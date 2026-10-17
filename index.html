@@ -1,60 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="Midnight">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kortex Client — Downloads</title>
-  <meta name="description" content="Download every version of Kortex Client, a Fabric utility client for Minecraft." />
+  <title>Kortex Client — Fabric Utility Client for Minecraft 26.3</title>
+  <meta name="description" content="Download every version of Kortex Client, an aesthetic Fabric utility client for Minecraft 26.3 with 57 modules and 7 themes." />
+  <meta name="theme-color" content="#05070D" />
+  <meta property="og:title" content="Kortex Client" />
+  <meta property="og:description" content="Aesthetic Fabric utility client for Minecraft 26.3. 57 modules, 7 themes, every version available." />
   <link rel="icon" href="assets/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="glow"></div>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="bg-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="bg-grid" aria-hidden="true"></div>
 
-  <header class="hero">
-    <img class="logo" src="assets/icon.png" alt="Kortex logo" />
-    <h1>Kortex <span>Client</span></h1>
-    <p class="tagline">Aesthetic Fabric utility client with ESP, combat, movement and HUD modules and a themed ClickGUI.</p>
-    <div class="hero-actions">
-      <a id="latest-btn" class="btn primary" href="#versions">Download latest</a>
-      <a class="btn ghost" href="#install">How to install</a>
+  <nav class="nav" id="nav">
+    <a class="nav-brand" href="#top">
+      <img src="assets/icon.png" alt="" />
+      <span>Kortex</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#themes">Themes</a>
+      <a href="#versions">Versions</a>
+      <a href="#install">Install</a>
+      <a href="#faq">FAQ</a>
     </div>
-    <p id="latest-meta" class="meta"></p>
+    <a class="btn btn-primary btn-sm nav-cta" data-latest-link href="#versions">
+      <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+      Download
+    </a>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-copy reveal">
+      <a class="pill" href="#versions">
+        <span class="pill-dot"></span>
+        <span id="hero-pill">Loading latest version…</span>
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+      <h1>
+        Play with<br />
+        <span class="gradient-text">style.</span>
+      </h1>
+      <p class="hero-sub">
+        Kortex is an aesthetic Fabric utility client for <b>Minecraft 26.3</b>:
+        57 modules, 7 hand-tuned themes, and a buttery-smooth ClickGUI.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" data-latest-link href="#versions">
+          <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+          <span id="hero-download-label">Download Kortex</span>
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#versions">All versions</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b data-count="57">0</b><span>Modules</span></div>
+        <div class="stat"><b data-count="7">0</b><span>Themes</span></div>
+        <div class="stat"><b id="stat-versions">–</b><span>Versions</span></div>
+        <div class="stat"><b id="stat-downloads">–</b><span>Downloads</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal" aria-label="Interactive ClickGUI preview">
+      <div class="screen">
+        <div class="screen-sky"></div>
+        <div class="screen-ground"></div>
+        <div class="watermark"><img src="assets/icon.png" alt="" /> Kortex <span id="wm-version">1.0.0</span></div>
+        <ul class="arraylist" id="arraylist"></ul>
+        <div class="gui-panel" id="gui-panel">
+          <div class="gui-header">
+            <span>Combat</span>
+            <span class="gui-count" id="gui-count"></span>
+          </div>
+          <ul class="gui-modules" id="gui-modules"></ul>
+        </div>
+        <div class="screen-hint">Click modules to toggle · right-click for settings</div>
+      </div>
+    </div>
   </header>
 
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee"></div>
+  </div>
+
   <main>
-    <section id="versions">
-      <h2>All versions</h2>
-      <p class="sub">Every release of Kortex Client, newest first.</p>
-      <div id="release-list" class="release-list">
-        <div class="card loading">Loading versions…</div>
+    <section id="features" class="section">
+      <div class="section-head reveal">
+        <span class="eyebrow">Features</span>
+        <h2>Everything you need. <span class="muted">Nothing you don't.</span></h2>
+        <p>Every module is configurable from the ClickGUI, saved to your config, and toggleable with a keybind.</p>
+      </div>
+      <div class="bento" id="feature-grid"></div>
+    </section>
+
+    <section id="themes" class="section">
+      <div class="section-head reveal">
+        <span class="eyebrow">Themes</span>
+        <h2>Seven moods. <span class="muted">Pick yours.</span></h2>
+        <p>These are the exact palettes from the client. Click one and the whole site switches to it.</p>
+      </div>
+      <div class="theme-grid reveal" id="theme-grid"></div>
+    </section>
+
+    <section id="versions" class="section">
+      <div class="section-head reveal">
+        <span class="eyebrow">Downloads</span>
+        <h2>Every version, <span class="muted">forever.</span></h2>
+        <p>New builds are published automatically. Older versions stay here in case you need them.</p>
+      </div>
+
+      <div id="latest-release" class="latest reveal">
+        <div class="skeleton skeleton-latest"></div>
+      </div>
+
+      <div class="archive reveal">
+        <div class="archive-head">
+          <h3>Version history</h3>
+          <label class="search">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="version-search" type="search" placeholder="Search versions…" autocomplete="off" />
+          </label>
+        </div>
+        <ol class="timeline" id="release-list">
+          <li class="skeleton skeleton-row"></li>
+          <li class="skeleton skeleton-row"></li>
+        </ol>
       </div>
     </section>
 
-    <section id="install">
-      <h2>How to install</h2>
-      <ol class="steps">
-        <li>Install <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric Loader</a> <b>0.19.5+</b> for Minecraft <b>26.3</b>.</li>
-        <li>Download <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Fabric API</a> for 26.3.</li>
-        <li>Put the Kortex <code>.jar</code> and Fabric API into your <code>.minecraft/mods</code> folder.</li>
-        <li>Launch the Fabric profile (Java <b>25+</b> required) and press <kbd>Right Shift</kbd> to open the ClickGUI.</li>
-      </ol>
+    <section id="install" class="section">
+      <div class="section-head reveal">
+        <span class="eyebrow">Install</span>
+        <h2>Up and running <span class="muted">in a minute.</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <span class="step-num">01</span>
+          <h4>Install Fabric</h4>
+          <p>Get the <a href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">Fabric Installer</a> and install Loader <b>0.19.5+</b> for Minecraft <b>26.3</b>.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">02</span>
+          <h4>Grab Fabric API</h4>
+          <p>Download <a href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">Fabric API</a> for 26.3 (0.162.0 or newer).</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">03</span>
+          <h4>Drop in the mods</h4>
+          <p>Put the Kortex <code>.jar</code> and Fabric API into <code>%appdata%\.minecraft\mods</code>.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">04</span>
+          <h4>Launch &amp; play</h4>
+          <p>Start the Fabric profile on Java <b>25+</b> and press <kbd>Right Shift</kbd> to open the ClickGUI.</p>
+        </div>
+      </div>
+
+      <div class="req-strip reveal">
+        <div><span>Minecraft</span><b>26.3</b></div>
+        <div><span>Fabric Loader</span><b>0.19.5+</b></div>
+        <div><span>Fabric API</span><b>0.162.0+26.3</b></div>
+        <div><span>Java</span><b>25+</b></div>
+      </div>
     </section>
 
-    <section id="requirements">
-      <h2>Requirements</h2>
-      <div class="req-grid">
-        <div class="req"><span>Minecraft</span><b>26.3</b></div>
-        <div class="req"><span>Fabric Loader</span><b>0.19.5+</b></div>
-        <div class="req"><span>Fabric API</span><b>0.162.0+26.3</b></div>
-        <div class="req"><span>Java</span><b>25+</b></div>
+    <section id="faq" class="section">
+      <div class="section-head reveal">
+        <span class="eyebrow">FAQ</span>
+        <h2>Questions, <span class="muted">answered.</span></h2>
       </div>
+      <div class="faq reveal">
+        <details>
+          <summary>Which version should I download?</summary>
+          <p>Use the latest one. It always has the newest modules and fixes. Older versions are only there in case you need a specific build.</p>
+        </details>
+        <details>
+          <summary>Why does it ask for a password?</summary>
+          <p>Kortex is password-locked. The password is checked against the Kortex server when you launch. Ask the developer for the current one.</p>
+        </details>
+        <details>
+          <summary>How do I open the menu?</summary>
+          <p>Press <kbd>Right Shift</kbd>. Left-click a module to toggle it, right-click to expand its settings, and drag panel headers to move them.</p>
+        </details>
+        <details>
+          <summary>It crashes on launch. What do I check?</summary>
+          <p>Make sure you're on Minecraft 26.3 with Fabric Loader 0.19.5+, Fabric API for 26.3 is installed, and your launcher uses Java 25 or newer.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="cta reveal">
+      <h2>Ready to go <span class="gradient-text">beast mode</span>?</h2>
+      <a class="btn btn-primary btn-lg" data-latest-link href="#versions">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+        <span id="cta-download-label">Download Kortex</span>
+      </a>
     </section>
   </main>
 
-  <footer>
-    <p>Kortex Client &middot; MIT License</p>
+  <footer class="footer">
+    <div class="footer-brand"><img src="assets/icon.png" alt="" /> Kortex Client</div>
+    <p>MIT License · Not affiliated with Mojang or Microsoft.</p>
+    <a id="gh-link" href="https://github.com/gorillaou/kortex-client" target="_blank" rel="noopener">GitHub</a>
   </footer>
+
+  <div class="toast" id="toast" role="status"></div>
 
   <script src="app.js"></script>
 </body>
