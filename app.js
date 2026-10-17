@@ -31,7 +31,6 @@ const ICONS = {
   render: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   player: '<circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>',
   hud: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>',
-  copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
   download: '<path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/>',
 };
 
@@ -251,8 +250,27 @@ function primaryJar(release) {
   return release.assets.find(isClientJar);
 }
 
-function copyHash(hash) {
-  navigator.clipboard.writeText(hash).then(() => toast("SHA-256 copied to clipboard"), () => toast("Couldn't copy hash"));
+// Each release body carries <!-- kortex-meta {...} --> written by the client's Gradle publish task.
+function releaseRequirements(release) {
+  const match = (release.body || "").match(/<!--\s*kortex-meta\s*(\{[\s\S]*?\})\s*-->/);
+  if (!match) return null;
+  try {
+    const meta = JSON.parse(match[1]);
+    return [
+      ["Minecraft", meta.minecraft],
+      ["Fabric Loader", meta.loader && `${meta.loader}+`],
+      ["Fabric API", meta.fabricApi],
+      ["Java", meta.java && `${meta.java}+`],
+    ].filter(([, value]) => value);
+  } catch {
+    return null;
+  }
+}
+
+function requirementChips(release) {
+  const reqs = releaseRequirements(release);
+  if (!reqs) return el("div", { class: "req-chips" }, el("span", { class: "req-chip muted", text: "Requirements not listed" }));
+  return el("div", { class: "req-chips" }, reqs.map(([label, value]) => el("span", { class: "req-chip" }, [el("span", { text: label }), el("b", { text: value })])));
 }
 
 function downloadButton(release, size = "btn-md") {
@@ -265,7 +283,6 @@ function renderLatest(release) {
   const container = document.getElementById("latest-release");
   const jar = primaryJar(release);
   const notes = cleanNotes(release.body) || "No release notes for this version.";
-  const hash = jar && jar.digest ? jar.digest.replace(/^sha256:/, "") : null;
 
   const side = el("div", { class: "latest-side" }, [
     el("div", { class: "meta-grid" }, [
@@ -274,7 +291,6 @@ function renderLatest(release) {
       el("div", { class: "meta-item" }, [el("span", { text: "Downloads" }), el("b", { text: jar ? formatNumber(jar.download_count) : "—" })]),
       el("div", { class: "meta-item" }, [el("span", { text: "Released" }), el("b", { text: timeAgo(release.published_at) })]),
     ]),
-    hash ? el("div", { class: "hash", title: "Click to copy SHA-256", onclick: () => copyHash(hash) }, [icon("copy"), el("code", { text: `sha256 ${hash}` })]) : null,
     downloadButton(release, "btn-lg"),
   ]);
 
@@ -287,6 +303,8 @@ function renderLatest(release) {
       ]),
       el("h3", { text: release.tag_name }),
       el("p", { class: "latest-notes", text: notes }),
+      el("p", { class: "req-label", text: "Requirements" }),
+      requirementChips(release),
     ]),
     side,
   ]));
@@ -314,7 +332,7 @@ function renderTimeline(releases, latest) {
     const sub = [formatDate(release.published_at), jar ? `${formatNumber(jar.download_count)} download${jar.download_count === 1 ? "" : "s"}` : null, firstLine || null].filter(Boolean).join(" · ");
 
     list.append(el("li", { class: `release-row${isLatest ? " is-latest" : ""}` }, [
-      el("div", { class: "release-main" }, [title, el("p", { class: "release-sub", text: sub })]),
+      el("div", { class: "release-main" }, [title, el("p", { class: "release-sub", text: sub }), requirementChips(release)]),
       el("div", { class: "release-actions" }, [
         jar ? el("span", { class: "release-size", text: formatSize(jar.size) }) : null,
         downloadButton(release, "btn-sm"),
@@ -345,6 +363,8 @@ function applyReleases(releases) {
   document.getElementById("hero-download-label").textContent = `Download ${latest.tag_name}`;
   document.getElementById("cta-download-label").textContent = `Download ${latest.tag_name}`;
   document.getElementById("wm-version").textContent = latest.tag_name.replace(/^v/, "");
+  const latestMc = (releaseRequirements(latest) || []).find(([label]) => label === "Minecraft");
+  if (latestMc) document.getElementById("hero-mc").textContent = latestMc[1];
   countUp(document.getElementById("stat-versions"), releases.length);
   countUp(document.getElementById("stat-downloads"), totalDownloads, formatNumber);
 
