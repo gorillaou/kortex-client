@@ -26,8 +26,8 @@ module.exports = async (req, res) => {
     }));
 
     res.setHeader("Cache-Control", hasToken()
-      ? "public, s-maxage=60, stale-while-revalidate=300"
-      : "public, s-maxage=300, stale-while-revalidate=3600");
+      ? "public, s-maxage=60"
+      : "public, s-maxage=60");
     res.status(200).json(body);
   } catch (err) {
     console.error(err);

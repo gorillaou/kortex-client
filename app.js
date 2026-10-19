@@ -173,7 +173,7 @@ function renderFeatures() {
   for (const category of CATEGORIES) {
     grid.append(el("article", { class: `feature glass reveal${category.wide ? " wide" : ""}` }, [
       el("div", { class: "feature-icon" }, icon(category.id)),
-      el("h3", {}, [category.name, el("small", { text: `${category.modules.length} modules` })]),
+      el("h3", {}, [category.name, el("small", { text: "Featured modules" })]),
       el("p", { text: category.blurb }),
       el("div", { class: "chips" }, category.modules.map((m) => el("span", { class: "chip", text: m }))),
     ]));
